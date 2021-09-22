@@ -9,3 +9,8 @@ output "sp_client_id" {
 output "sp_display_name" {
   value = azuread_application.sp.display_name 
 }
+
+output "sp_password" {
+  value = azuread_service_principal_password.sp.value
+  sensitive = true
+}

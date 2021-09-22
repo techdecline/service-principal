@@ -28,6 +28,7 @@ resource "azurerm_role_assignment" "sp" {
 }
 
 resource "azurerm_key_vault_secret" "sp" {
+  count        = length(var.key_vault_id) > 0 ? 1 : 0
   name         = azuread_application.sp.display_name
   value        = azuread_service_principal_password.sp.value
   key_vault_id = var.key_vault_id
