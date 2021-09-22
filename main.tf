@@ -1,16 +1,18 @@
 resource "azuread_application" "sp" {
   display_name = var.sp_name
-  # required_resource_access {
-  #   resource_app_id = "00000003-0000-0000-c000-000000000000"
-  #   resource_access {
-  #     id   = "06da0dbc-49e2-44d2-8312-53f166ab848a"
-  #     type = "Scope"
-  #   }
-  #   resource_access {
-  #     id   = "5f8c59db-677d-491f-a6b8-5f174b11ec1d"
-  #     type = "Scope"
-  #   }
-  # }
+  dynamic "required_resource_access" {
+    for_each = var.required_resource_access
+    content {
+      resource_app_id = required_resource_access.value["resource_app_id"]
+      dynamic "resource_access" {
+        for_each = required_resource_access.value["resource_access"]
+        content {
+          id = resource_access.value["id"]
+          type = resource_access.value["type"]
+        }
+      }
+    }
+  }
 }
 
 resource "azuread_service_principal" "sp" {
